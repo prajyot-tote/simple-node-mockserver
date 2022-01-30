@@ -1,0 +1,21 @@
+{
+  "name": "simple-mockserver",
+  "version": "0.0.1",
+  "description": "Simple mock server",
+  "main": "app.js",
+  "scripts": {
+    "start" : "nodemon app.js"
+  },
+  "author": "Prajyot Tote",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.2",
+    "uuid": "^8.3.2"
+  },
+  "nodemonConfig": {
+    "ignore": ["db_file"]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
