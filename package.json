@@ -17,5 +17,23 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
-  }
+  },
+  "keywords": [
+    "simple mockserver",
+    "simple mock server",
+    "mock server",
+    "prototype",
+    "quick mock server",
+    "quick prototype",
+    "quick api",
+    "mock api server",
+    "nodejs",
+    "mock server nodejs",
+    "mock server with database",
+    "DB",
+    "Database",
+    "Temporary database",
+    "quick start mock server",
+    "quick start"
+  ]
 }
