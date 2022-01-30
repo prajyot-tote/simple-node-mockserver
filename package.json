@@ -1,5 +1,5 @@
 {
-  "name": "simple-mockserver",
+  "name": "simple-node-mockserver",
   "version": "0.0.1",
   "description": "Simple mock server",
   "main": "app.js",
