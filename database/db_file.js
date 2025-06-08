@@ -5,7 +5,6 @@ class DBFile extends DBFunction
 {
     DB_PATH = "db_file";
     STORE = {};
-    SEPRATOR = "|!|"
 
     constructor()
     {
@@ -74,7 +73,7 @@ class DBFile extends DBFunction
             }
         }
         
-        return;
+        return undefined;
     }
 
     onDeleteData(tableName, id)
