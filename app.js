@@ -1,6 +1,7 @@
 const DBRam = require("./database/db_ram");
 const DBFile = require("./database/db_file");
 const DBFunction = require("./database/db_function");
+const DBExcel = require("./database/db_excel");
 
 class SimpleMockServer
 {
@@ -195,7 +196,7 @@ const myTables =
 ]
 
 const server = new SimpleMockServer();
-const ram_instance = new DBRam();
+const ram_instance = new DBExcel();
 server.setTables(myTables, ram_instance);
 server.customAPI("get", "/custom", (req, resp) => 
 {

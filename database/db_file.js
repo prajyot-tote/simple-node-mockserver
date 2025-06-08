@@ -3,7 +3,7 @@ const fs = require('fs');
 
 class DBFile extends DBFunction
 {
-    DB_PATH = "db_file";
+    DB_PATH = require('os').tmpdir() + "/mock_server_db_file";
     STORE = {};
 
     constructor()
