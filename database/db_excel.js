@@ -22,7 +22,6 @@ class DBExcel extends DBFunction {
     onCreateTable(tableName) {
         try {
             const wb = XLSX.readFile(this.EXCEL_PATH);
-            console.log(`🚀 ~ :25 ~ DBExcel ~ onCreateTable ~ this.EXCEL_PATH:`, this.EXCEL_PATH);
             if (!wb.SheetNames.includes(tableName)) {
                 const ws = XLSX.utils.json_to_sheet([]);
                 XLSX.utils.book_append_sheet(wb, ws, tableName);
