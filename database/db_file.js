@@ -141,12 +141,9 @@ class DBFile extends DBFunction
                 fs.writeFileSync(file_path, "");
             }
         }
-        else
+        else if (fs.existsSync(this.DB_PATH))
         {
-            if (fs.existsSync(this.DB_PATH))
-            {
-                fs.rmdirSync(this.DB_PATH);
-            }
+            fs.rmdirSync(this.DB_PATH);
         }
     }
 }
