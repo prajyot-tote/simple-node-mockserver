@@ -1,7 +1,7 @@
 "use strict"
 const { v4: uuidv4 } = require('uuid');
 
-class DBFunciton
+class DBFunction
 {
     static QUERY_OPERATION = 
     {
@@ -17,13 +17,30 @@ class DBFunciton
 
     queryFunc = {}
     queryTable;
-    
-    onCreateTable(tableName){}
-    onSaveData(tableName, data){}
-    onGetData(tableName){}
-    onDeleteData(tableName, id){}
-    isSeeded(tableName){ return false; }
-    purge(tableName){}
+
+    onCreateTable(_tableName) {
+        throw new Error('onCreateTable method must be implemented by subclass');
+    }
+
+    onSaveData(_tableName, _data) {
+        throw new Error('onSaveData method must be implemented by subclass');
+    }
+
+    onGetData(_tableName) {
+        throw new Error('onGetData method must be implemented by subclass');
+    }
+
+    onDeleteData(_tableName, _id) {
+        throw new Error('onDeleteData method must be implemented by subclass');
+    }
+
+    isSeeded(_tableName) {
+        throw new Error('isSeeded method must be implemented by subclass');
+    }
+
+    purge(_tableName) {
+        throw new Error('purge method must be implemented by subclass');
+    }
 
     createTable(tableName)
     {
@@ -32,7 +49,7 @@ class DBFunciton
     
     saveData(tableName, data)
     {
-        data.id = uuidv4().toLocaleUpperCase().replace(/-/g, "");
+        data.id = data.id?data.id:uuidv4().toLocaleUpperCase().replace(/-/g, "");
         return this.onSaveData(tableName, data);
     }
     
@@ -50,7 +67,7 @@ class DBFunciton
     {
         data.id = id;
         this.query(tableName);
-        this.where("id", id, DBFunciton.QUERY_OPERATION.EQUALS);
+        this.where("id", id, DBFunction.QUERY_OPERATION.EQUALS);
         const result = this.execute()[0];
 
         for(let key in data)
@@ -70,19 +87,19 @@ class DBFunciton
     
     and(key, value, operation)
     {
-        this.where(key, value, operation, DBFunciton.CONDITION_TYPE.AND)
+        this.where(key, value, operation, DBFunction.CONDITION_TYPE.AND)
     }
     
     or(key, value, operation)
     {
-        this.where(key, value, operation, DBFunciton.CONDITION_TYPE.OR)
+        this.where(key, value, operation, DBFunction.CONDITION_TYPE.OR)
     }
     
     where(key, value, operation, type)
     {
         if(!type)
         {
-            type = DBFunciton.CONDITION_TYPE.AND;
+            type = DBFunction.CONDITION_TYPE.AND;
         }
     
         const func = (data) => 
@@ -92,7 +109,7 @@ class DBFunciton
             {
                 switch(operation)
                 {
-                    case DBFunciton.QUERY_OPERATION.EQUALS:
+                    case DBFunction.QUERY_OPERATION.EQUALS:
                     {
                         if(valueToMatch == value)
                         {
@@ -102,7 +119,7 @@ class DBFunciton
                         break;
                     }
     
-                    case DBFunciton.QUERY_OPERATION.NOT_EQUALS:
+                    case DBFunction.QUERY_OPERATION.NOT_EQUALS:
                     {
                         if(valueToMatch != value)
                         {
@@ -132,57 +149,45 @@ class DBFunciton
     {
         const funcList = this.queryFunc[this.queryTable];
         let dataList = this.getData(this.queryTable);
-    
-        let result = [];
-    
-        for(let i in funcList)
-        {
-            const funcData = funcList[i];
-            for(let i in dataList)
-            {
-                const data = dataList[i];
-                
-                switch(funcData.type)
-                {
-                    case DBFunciton.CONDITION_TYPE.AND: 
-                    {
-                        const resultData = funcData.conditionFunc(data);
-                        if(resultData)
-                        {
-                            if(!result.includes(resultData))
-                            {
-                                result.push(resultData);
-                            }
-                        }
-                        else
-                        {
-                            result = result.filter((ele) => { return ele?.id != data?.id })
-                        }
-    
-                        break;
-                    }
-        
-                    case DBFunciton.CONDITION_TYPE.OR:
-                    {
-                        const resultData = funcData.conditionFunc(data);
-                        if(resultData)
-                        {
-                            if(!result.includes(resultData))
-                            {
-                                result.push(resultData);
-                            }
-                        }
-    
-                        break;
-                    }
-                }
-            }   
+
+        if (!funcList || funcList.length === 0) {
+            return dataList;
         }
-    
+
+        let result = [];
+        let resultMap = {};
+
+        for (const data of dataList) {
+            let include = this.evaluateDataAgainstConditions(data, funcList);
+
+            if (include) {
+                if (!resultMap[data.id]) {
+                    result.push(data);
+                    resultMap[data.id] = true;
+                }
+            }
+        }
+
         return result;
+    }
+
+    evaluateDataAgainstConditions(data, funcList) {
+        let include;
+        for (const funcData of funcList) {
+            const matched = !!funcData.conditionFunc(data);
+
+            if (funcData.type === DBFunction.CONDITION_TYPE.AND) {
+                if (include === undefined) include = true;
+                include = include && matched;
+            } else if (funcData.type === DBFunction.CONDITION_TYPE.OR) {
+                if (include === undefined) include = false;
+                include = include || matched;
+            }
+        }
+        return include;
     }
 }
 
 
 
-module.exports = DBFunciton
+module.exports = DBFunction

@@ -4,18 +4,22 @@
   "description": "Simple mock server",
   "main": "app.js",
   "scripts": {
-    "start" : "nodemon app.js"
+    "start": "nodemon app.js"
   },
   "author": "Prajyot Tote",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.2",
     "uuid": "^8.3.2"
   },
   "nodemonConfig": {
-    "ignore": ["db_file"]
+    "ignore": [
+      "db_file"
+    ]
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.0.1",
     "nodemon": "^2.0.15"
   },
   "keywords": [
@@ -37,9 +41,10 @@
     "quick start"
   ],
   "homepage": "https://github.com/prajyot-tote/simple-node-mockserver#readme",
-  "repository": 
-  {
-    "url" : "https://github.com/prajyot-tote/simple-node-mockserver"
+  "repository": {
+    "url": "https://github.com/prajyot-tote/simple-node-mockserver"
   },
-  "bugs": { "url": "https://github.com/prajyot-tote/simple-node-mockserver/issues" }
+  "bugs": {
+    "url": "https://github.com/prajyot-tote/simple-node-mockserver/issues"
+  }
 }
