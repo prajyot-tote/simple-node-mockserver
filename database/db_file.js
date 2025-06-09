@@ -3,9 +3,8 @@ const fs = require('fs');
 
 class DBFile extends DBFunction
 {
-    DB_PATH = "db_file";
+    DB_PATH = require('os').tmpdir() + "/mock_server_db_file";
     STORE = {};
-    SEPRATOR = "|!|"
 
     constructor()
     {
@@ -74,7 +73,7 @@ class DBFile extends DBFunction
             }
         }
         
-        return;
+        return undefined;
     }
 
     onDeleteData(tableName, id)
@@ -142,12 +141,9 @@ class DBFile extends DBFunction
                 fs.writeFileSync(file_path, "");
             }
         }
-        else
+        else if (fs.existsSync(this.DB_PATH))
         {
-            if (fs.existsSync(this.DB_PATH))
-            {
-                fs.rmdirSync(this.DB_PATH);
-            }
+            fs.rmdirSync(this.DB_PATH);
         }
     }
 }

@@ -1,23 +1,25 @@
-
 const DBRam = require("./database/db_ram");
 const DBFile = require("./database/db_file");
-const DBFunciton = require("./database/db_function");
+const DBFunction = require("./database/db_function");
+const DBExcel = require("./database/db_excel");
 
 class SimpleMockServer
 {
     app;
     PORT;
-
+    
     constructor(app, port)
     {
         if(!app)
         {
             const express = require("express");
+            const cors = require('cors');
             this.app = express();
-            this.app.use(express.json())
+            this.app.use(cors());
+            this.app.use(express.json());
         }
         
-        this.PORT = port? port : 2000;
+        this.PORT = port || 2000;
     }
 
     DBInstance;
@@ -64,9 +66,9 @@ class SimpleMockServer
     
             this.app.post(`/${tableName}`, (req, res) => 
             {
-                const recievedData = req.body
-                this.DBInstance.saveData(tableName, recievedData);
-                res.status(200).json({ success : true , id : recievedData.id});
+                const receivedData = req.body
+                this.DBInstance.saveData(tableName, receivedData);
+                res.status(200).json({ success : true , id : receivedData.id});
             });
     
             this.app.put(`/${tableName}/:id`, (req, res) => 
@@ -115,6 +117,8 @@ class SimpleMockServer
                 for(let i in dataList)
                 {
                     const data = dataList[i];
+                    console.log(data);
+                    
                     if(data.id == id)
                     {
                         res.status(200).json({ success : true , data : data});
@@ -138,64 +142,63 @@ class SimpleMockServer
 
 module.exports = 
 {
-    SimpleMockServer : SimpleMockServer,
-    DBFile : DBFile,
-    DBRam : DBRam,
-    DBFunciton : DBFunciton
+    SimpleMockServer,
+    DBFile,
+    DBRam,
+    DBFunction
 }
 
+// Example usage
+const myTables = 
+[
+    { 
+        name : "Users",
+        seed : 
+        [
+            {
+                id : 1,
+                first_name : "Jhon",
+                last_name : "Dantas",
+                company_name : null
+            },
+            {
+                id : 2,
+                first_name : "Jilly",
+                last_name : "Jonson",
+                company_name : null
+            },
+            {
+                id : 3,
+                first_name : "Peter",
+                last_name : "Mathuse",
+                company_name : null
+            },
+            {
+                id : 4,
+                first_name : "Nolan",
+                last_name : "Recko",
+                company_name : "Recko Rock Inc."
+            },
+            {
+                id : 5,
+                first_name : "Jhon",
+                last_name : "Longbottom",
+                company_name : null
+            },
+            {
+                id : 6,
+                first_name : "Misto",
+                last_name : "Mekka",
+                company_name : "Mekka Traders"
+            }
+        ] 
+    }
+]
 
-// const myTables = 
-// [
-//     { 
-//         name : "Users",
-//         seed : 
-//         [
-//             {
-//                 first_name : "Jhon",
-//                 last_name : "Dantas",
-//                 company_name : null
-//             },
-//             {
-//                 first_name : "Jilly",
-//                 last_name : "Jonson",
-//                 company_name : null
-//             },
-//             {
-//                 first_name : "Peter",
-//                 last_name : "Mathuse",
-//                 company_name : null
-//             },
-//             {
-//                 first_name : "Nolan",
-//                 last_name : "Recko",
-//                 company_name : "Recko Rock Inc."
-//             },
-//             {
-//                 first_name : "Jhon",
-//                 last_name : "Longbottom",
-//                 company_name : null
-//             },
-//             {
-//                 first_name : "Misto",
-//                 last_name : "Mekka",
-//                 company_name : "Mekka Traders"
-//             }
-//         ] 
-//     }
-// ]
+const server = new SimpleMockServer();
+const ram_instance = new DBExcel();
+server.setTables(myTables, ram_instance);
 
-// const server = new SimpleMockServer();
-// server.setTables(myTables, new DBRam());
-// server.customAPI("get", "/custom", (req, resp) => 
-// {
-//     DBInstance.query("Users");
-    
-//     DBInstance.and("last_name", "Longbottom", DBFunciton.QUERY_OPERATION.EQUALS);
-    
-//     const result = DBInstance.execute();
-//     resp.status(200).json({ data :result });
-// });
-// server.start();
+server.start();
 
 

@@ -52,7 +52,7 @@ class DBRam extends DBFunction
         }
     }
 
-    isSeeded(tableName){ return this.STORE[tableName].lenght > 0 }
+    isSeeded(tableName){ return this.STORE[tableName].length > 0 }
 
     purge(tableName)
     {
