@@ -148,7 +148,7 @@ module.exports =
     DBFunction
 }
 
-
+// Example usage
 const myTables = 
 [
     { 
@@ -198,16 +198,6 @@ const myTables =
 const server = new SimpleMockServer();
 const ram_instance = new DBExcel();
 server.setTables(myTables, ram_instance);
-server.customAPI("get", "/custom", (req, resp) => 
-{
-    ram_instance.query("Users");
-    ram_instance.and("last_name", "Longbottom", DBFunction.QUERY_OPERATION.EQUALS);
-    
-    const result = ram_instance.execute();
-    resp.status(200).json({ data :result });
-});
-
-
 
 server.start();
 
