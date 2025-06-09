@@ -1,6 +1,6 @@
 {
   "name": "simple-node-mockserver",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Simple mock server",
   "main": "app.js",
   "scripts": {
